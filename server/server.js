@@ -30,7 +30,8 @@ function createServer(options, cb) {
         cb(null, {
             httpServer: server,
             config: config,
-            clients: clients
+            clients: clients,
+            destroy: clients.destroy
         });
 
         function onRequest(req, res) {

@@ -9,6 +9,12 @@
         },
         "uncaught-exception": {
             "backupFile": "/var/log/raynos/manga-feed"
+        },
+        "level": {
+            "location": "/var/db/raynos/manga-feed"
+        },
+        "level-session": {
+            "subName": "sessions"
         }
     }
 }

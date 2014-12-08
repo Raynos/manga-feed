@@ -1,16 +1,24 @@
 'use strict';
 
 var request = require('request');
+var path = require('path');
+var os = require('os');
+var cuid = require('cuid');
 
 module.exports = makeRequest;
 
 function makeRequest(createServer, reqOpts, cb) {
     var _server;
+    var _destroy;
     createServer({
         seed: {
             clients: {
                 logtron: {
                     console: false
+                },
+                level: {
+                    location: path.join(os.tmpDir(),
+                        'manga-feed-level-' + cuid())
                 }
             }
         }
@@ -21,6 +29,7 @@ function makeRequest(createServer, reqOpts, cb) {
 
         var server = service.httpServer;
         _server = server;
+        _destroy = service.destroy;
         server.listen(0, onPort);
 
         function onPort() {
@@ -35,5 +44,6 @@ function makeRequest(createServer, reqOpts, cb) {
 
     return function destroy() {
         _server.close();
+        _destroy();
     };
 }
