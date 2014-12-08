@@ -12,7 +12,8 @@ function createClients(config, callback) {
 
     parallel([
         createLogger.bind(null, config, clients),
-        createUncaught.bind(null, config, clients)
+        createUncaught.bind(null, config, clients),
+        createDatabase.bind(null, config, clients)
     ], onClients);
 
     function onClients(err) {
@@ -21,7 +22,7 @@ function createClients(config, callback) {
 }
 
 function createLogger(config, clients, cb) {
-    var conf = config.get('clients.logtron') || {};
+    var conf = config.get('clients.logtron');
     clients.logger = Logtron({
         meta: {
             team: config.get('team'),
@@ -36,7 +37,7 @@ function createLogger(config, clients, cb) {
 }
 
 function createUncaught(config, clients, cb) {
-    var conf = config.get('clients.uncaught-exception') || {};
+    var conf = config.get('clients.uncaught-exception');
     clients.onError = uncaughtException({
         logger: clients.logger,
         prefix: 'Uncaught exception occurred: ',

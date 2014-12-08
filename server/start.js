@@ -2,7 +2,7 @@
 
 var createServer = require('./server.js');
 
-createServer(function onServer(err, service) {
+createServer({}, function onServer(err, service) {
     if (err) {
         throw err;
     }
