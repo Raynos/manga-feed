@@ -11,29 +11,39 @@
     "url": "https://github.com/Raynos/manga-feed/issues",
     "email": "raynos2@gmail.com"
   },
-  "contributors": [{
-    "name": "Raynos"
-  }],
+  "contributors": [
+    {
+      "name": "Raynos"
+    }
+  ],
   "dependencies": {
+    "logtron": "^6.0.0",
+    "process": "^0.9.0",
+    "run-parallel": "^1.0.0",
+    "uncaught-exception": "^4.2.0",
+    "zero-config": "^4.0.0"
   },
   "devDependencies": {
-    "tape": "^2.12.3",
-    "jshint": "^2.5.0",
-    "istanbul": "^0.2.7",
-    "tap-spec": "^0.1.8",
-    "pre-commit": "0.0.5",
     "coveralls": "^2.10.0",
-    "run-browser": "^1.3.0"
+    "istanbul": "^0.2.7",
+    "jshint": "^2.5.0",
+    "lint-trap": "^0.4.8",
+    "pre-commit": "0.0.5",
+    "run-browser": "^1.3.0",
+    "tap-spec": "^0.1.8",
+    "tape": "^2.12.3"
   },
-  "licenses": [{
-    "type": "MIT",
-    "url": "http://github.com/Raynos/manga-feed/raw/master/LICENSE"
-  }],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/Raynos/manga-feed/raw/master/LICENSE"
+    }
+  ],
   "scripts": {
+    "start": "node server/start.js",
     "test": "npm run jshint -s && NODE_ENV=test node test/index.js | tap-spec",
     "unit-test": "NODE_ENV=test node test/index.js | tap-spec",
-    "jshint-pre-commit": "jshint --verbose $(git diff --cached --name-only | grep '\\.js$')",
-    "jshint": "jshint --verbose .",
+    "jshint": "lint-trap",
     "cover": "istanbul cover --report none --print detail test/index.js",
     "view-cover": "istanbul report html && open ./coverage/index.html",
     "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",

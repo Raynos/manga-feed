@@ -1,8 +1,3 @@
-var test = require('tape');
+'use strict';
 
-var mangaFeed = require('../index.js');
-
-test('mangaFeed is a function', function (assert) {
-    assert.equal(typeof mangaFeed, 'function');
-    assert.end();
-});
+require('../server/test/');

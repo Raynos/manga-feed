@@ -1,0 +1,14 @@
+{
+    "team": "raynos",
+    "project": "manga-feed",
+    "port": 9090,
+    "clients": {
+        "logtron": {
+            "logFolder": "/var/log/raynos/manga-feed",
+            "console": true
+        },
+        "uncaught-exception": {
+            "backupFile": "/var/log/raynos/manga-feed"
+        }
+    }
+}
