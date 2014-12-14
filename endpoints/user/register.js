@@ -1,19 +1,27 @@
 'use strict';
 
 var Validator = require('validate-form');
+var TypedError = require('error/typed');
 
-var typedRequestHandler = require('./lib/typed-request-handler.js');
+var typedRequestHandler = require(
+    '../../lib/typed-request-handler/');
+
+var LoggedInError = TypedError({
+    type: 'user-register.already-logged-in',
+    message: 'User is already logged in',
+    statusCode: 400
+});
 
 module.exports = typedRequestHandler(registerUser, {
     session: true,
     validateBody: Validator({
         email: [
             Validator.truthy('is required'),
-            Validator.isEmail('Must be an email')
+            Validator.email('Must be an email')
         ],
         confirmEmail: [
             Validator.truthy('is required'),
-            Validator.isEmail('Must be an email')
+            Validator.email('Must be an email')
         ],
         password: [
             Validator.truthy('is required'),
@@ -29,8 +37,9 @@ function registerUser(treq, opts, cb) {
         if (err) {
             return cb(err);
         }
+
         if (user) {
-            return cb(new Error('already logged in'));
+            return cb(LoggedInError());
         }
 
         var userService = opts.services.user;

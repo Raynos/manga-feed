@@ -1,6 +1,6 @@
 'use strict';
 
-var HttpHashRouter = require('./lib/http-hash-router.js');
+var HttpHashRouter = require('../lib/http-hash-router/');
 var process = require('process');
 
 module.exports = createRouter;

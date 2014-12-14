@@ -3,6 +3,7 @@
 var http = require('http');
 var fetchConfig = require('zero-config');
 
+var accessLog = require('../lib/http-access-log/');
 var createClients = require('./clients/');
 var Router = require('./router.js');
 
@@ -24,7 +25,7 @@ function createServer(options, cb) {
             config: config
         };
         var server = http.createServer();
-        server.on('request', accessLog(clients.logger));
+        server.on('request', accessLog(clients.logger.access));
         server.on('request', onRequest);
 
         cb(null, {
@@ -35,31 +36,14 @@ function createServer(options, cb) {
         });
 
         function onRequest(req, res) {
-            router(req, res, opts, onError);
+            router(req, res, opts, handleError);
 
-            function onError(err) {
-                if (!err) {
-                    return;
+            function handleError(err) {
+                if (err) {
+                    res.statusCode = err.statusCode || 500;
+                    res.end(err.message);
                 }
-
-                res.statusCode = err.statusCode || 500;
-                res.end(err.message);
             }
         }
     });
-}
-
-function accessLog(logger) {
-    return function logRequest(req, res) {
-        var start = Date.now();
-        res.on('finish', function onFinish() {
-            logger.access('a request was made', {
-                statusCode: res.statusCode,
-                time: Date.now() - start,
-                uri: req.url,
-                host: req.headers.host,
-                method: req.method
-            });
-        });
-    };
 }

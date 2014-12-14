@@ -2,7 +2,8 @@
 
 var test = require('tape');
 
-var makeRequest = require('./lib/request.js');
+var makeRequest = require('../../lib/test-server-request/');
+var allocServer = require('./lib/alloc-server.js');
 var createServer = require('../server.js');
 
 test('can create a server', function t(assert) {
@@ -15,7 +16,7 @@ test('can create a server', function t(assert) {
 });
 
 test('can call health', function t(assert) {
-    var destroy = makeRequest(createServer, {
+    makeRequest(allocServer, {
         url: '/health'
     }, function onResponse(err, resp) {
         assert.ifError(err);
@@ -23,13 +24,12 @@ test('can call health', function t(assert) {
         assert.equal(resp.statusCode, 200);
         assert.equal(resp.body, 'OK');
 
-        destroy();
         assert.end();
     });
 });
 
 test('responds to 404', function t(assert) {
-    var destroy = makeRequest(createServer, {
+    makeRequest(allocServer, {
         url: '/404'
     }, function onResponse(err, resp) {
         assert.ifError(err);
@@ -37,7 +37,6 @@ test('responds to 404', function t(assert) {
         assert.equal(resp.statusCode, 404);
         assert.equal(resp.body, 'Resource Not Found');
 
-        destroy();
         assert.end();
     });
 });
