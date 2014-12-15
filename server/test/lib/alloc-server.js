@@ -8,8 +8,8 @@ var createApp = require('../../server.js');
 
 module.exports = allocServer;
 
-function allocServer(callback) {
-    createApp({
+function allocServer() {
+    var httpServer = createApp({
         seed: {
             clients: {
                 logtron: {
@@ -23,17 +23,17 @@ function allocServer(callback) {
         }
     }, function onServer(err, app) {
         if (err) {
-            return callback(err);
+            return httpServer.emit('error', err);
         }
 
-        var server = app.httpServer;
-
-        var $close = server.close;
-        server.close = function fakeClose() {
+        var $close = httpServer.close;
+        httpServer.close = function fakeClose() {
             app.destroy();
             return $close.apply(this, arguments);
         };
 
-        callback(null, server);
+        httpServer.listen(0);
     });
+
+    return httpServer;
 }

@@ -60,7 +60,9 @@ function createUncaught(config, clients, cb) {
 
 function createDatabase(config, clients, cb) {
     var conf = config.get('clients.level');
-    var db = level(conf.location, {});
+    var db = level(conf.location, {
+        valueEncoding: 'json'
+    });
     db = levelSublevel(db);
     clients.level = db;
 

@@ -11,6 +11,11 @@ var LoggedInError = TypedError({
     message: 'User is already logged in',
     statusCode: 400
 });
+var EmailNotSameError = TypedError({
+    type: 'user-register.email-not-same',
+    message: 'The confirm email is not the same as the email',
+    statusCode: 400
+});
 
 module.exports = typedRequestHandler(registerUser, {
     session: true,
@@ -42,11 +47,14 @@ function registerUser(treq, opts, cb) {
             return cb(LoggedInError());
         }
 
+        if (treq.body.email !== treq.body.confirmEmail) {
+            return cb(EmailNotSameError())
+        }
+
         var userService = opts.services.user;
 
         userService.register({
             email: treq.body.email,
-            confirmEmail: treq.body.confirmEmail,
             password: treq.body.password
         }, onRegistered);
     }

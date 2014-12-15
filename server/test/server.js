@@ -16,7 +16,9 @@ test('can create a server', function t(assert) {
 });
 
 test('can call health', function t(assert) {
-    makeRequest(allocServer, {
+    var server = allocServer();
+
+    makeRequest(server, {
         url: '/health'
     }, function onResponse(err, resp) {
         assert.ifError(err);
@@ -24,12 +26,15 @@ test('can call health', function t(assert) {
         assert.equal(resp.statusCode, 200);
         assert.equal(resp.body, 'OK');
 
+        server.close();
         assert.end();
     });
 });
 
 test('responds to 404', function t(assert) {
-    makeRequest(allocServer, {
+    var server = allocServer();
+
+    makeRequest(server, {
         url: '/404'
     }, function onResponse(err, resp) {
         assert.ifError(err);
@@ -37,6 +42,7 @@ test('responds to 404', function t(assert) {
         assert.equal(resp.statusCode, 404);
         assert.equal(resp.body, 'Resource Not Found');
 
+        server.close();
         assert.end();
     });
 });

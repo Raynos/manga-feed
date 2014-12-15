@@ -5,6 +5,7 @@ var fetchConfig = require('zero-config');
 
 var accessLog = require('../lib/http-access-log/');
 var createClients = require('./clients/');
+var createServices = require('../services/');
 var Router = require('./router.js');
 
 module.exports = createServer;
@@ -13,6 +14,7 @@ function createServer(options, cb) {
     var config = fetchConfig(__dirname, {
         seed: options.seed
     });
+    var httpServer = http.createServer();
 
     createClients(config, function onClients(err, clients) {
         if (err) {
@@ -20,16 +22,18 @@ function createServer(options, cb) {
         }
 
         var router = Router();
+        var services = createServices(clients);
         var opts = {
             clients: clients,
-            config: config
+            config: config,
+            services: services
         };
-        var server = http.createServer();
-        server.on('request', accessLog(clients.logger.access));
-        server.on('request', onRequest);
+        httpServer.on('request',
+            accessLog(clients.logger.access));
+        httpServer.on('request', onRequest);
 
         cb(null, {
-            httpServer: server,
+            httpServer: httpServer,
             config: config,
             clients: clients,
             destroy: clients.destroy
@@ -46,4 +50,6 @@ function createServer(options, cb) {
             }
         }
     });
+
+    return httpServer;
 }
