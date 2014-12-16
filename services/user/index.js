@@ -4,10 +4,20 @@ var levelSublevel = require('level-sublevel');
 var cuid = require('cuid');
 var pcrypt = require('pcrypt');
 var Secondary = require('level-secondary');
+var TypedError = require('error/typed');
+var assert = require('assert');
+
+var DuplicateEmailError = TypedError({
+    type: 'services.user.duplicate-email',
+    message: 'A user with that email already exists',
+    statusCode: 400
+});
 
 module.exports = UserService;
 
 function UserService(clients) {
+    assert.ok(clients.level, 'clients.level required');
+
     var db = levelSublevel(clients.level);
     var usersDb = db.sublevel('users', {
         valueEncoding: 'json'
@@ -32,7 +42,7 @@ function UserService(clients) {
             }
 
             if (user) {
-                return callback(new Error('duplicate email'));
+                return callback(DuplicateEmailError());
             }
 
             passGen.gen(userObj.password, onHash);

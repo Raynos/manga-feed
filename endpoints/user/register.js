@@ -7,12 +7,12 @@ var typedRequestHandler = require(
     '../../lib/typed-request-handler/');
 
 var LoggedInError = TypedError({
-    type: 'user-register.already-logged-in',
+    type: 'endpoints.user.register.already-logged-in',
     message: 'User is already logged in',
     statusCode: 400
 });
 var EmailNotSameError = TypedError({
-    type: 'user-register.email-not-same',
+    type: 'endpoints.user.register.email-not-same',
     message: 'The confirm email is not the same as the email',
     statusCode: 400
 });
@@ -48,7 +48,7 @@ function registerUser(treq, opts, cb) {
         }
 
         if (treq.body.email !== treq.body.confirmEmail) {
-            return cb(EmailNotSameError())
+            return cb(EmailNotSameError());
         }
 
         var userService = opts.services.user;

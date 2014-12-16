@@ -10,12 +10,14 @@ registerTests(allocRegisterServer, hammockRequest);
 
 function allocRegisterServer(opts) {
     opts = opts || {};
+    var clients = {
+        session: opts.session || mocks.session(),
+        level: opts.level || mocks.level()
+    };
     var options = {
-        clients: {
-            session: opts.session || mocks.session()
-        },
+        clients: clients,
         services: {
-            user: opts.user || mocks.user()
+            user: opts.user || mocks.user(clients)
         }
     };
 

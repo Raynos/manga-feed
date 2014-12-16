@@ -1,13 +1,9 @@
 'use strict';
 
+var UserService = require('../../services/user/');
+
 module.exports = MockUser;
 
-function MockUser() {
-    return {
-        register: function register(user, cb) {
-            cb(null, {
-                email: user.email
-            });
-        }
-    };
+function MockUser(clients) {
+    return UserService(clients);
 }

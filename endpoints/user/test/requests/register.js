@@ -3,7 +3,7 @@
 var test = require('tape');
 
 module.exports = function tests(allocServer, makeRequest) {
-    test('can register', function t(assert) {
+    test('can register', function registerT(assert) {
         var server = allocServer();
 
         makeRequest(server, {
@@ -54,7 +54,64 @@ module.exports = function tests(allocServer, makeRequest) {
 
                 assert.equal(resp.statusCode, 400);
                 assert.equal(resp.body.type,
-                    'user-register.already-logged-in');
+                    'endpoints.user.register.already-logged-in');
+
+                server.close();
+                assert.end();
+            });
+        });
+    });
+
+    test('invalid confirmEmail', function t(assert) {
+        var server = allocServer();
+
+        makeRequest(server, {
+            url: '/register',
+            json: {
+                email: 'foo@bar.com',
+                confirmEmail: 'foo2@bar.com',
+                password: 'foobar123'
+            }
+        }, function onResponse(err, resp) {
+            assert.ifError(err);
+
+            assert.equal(resp.statusCode, 400);
+            assert.equal(resp.body.type,
+                'endpoints.user.register.email-not-same');
+
+            server.close();
+            assert.end();
+        });
+    });
+
+    test('duplicate email', function t(assert) {
+        var server = allocServer();
+
+        makeRequest(server, {
+            url: '/register',
+            json: {
+                email: 'foo@bar.com',
+                confirmEmail: 'foo@bar.com',
+                password: 'foobar123'
+            }
+        }, function onResponse(err, resp) {
+            assert.ifError(err);
+
+            assert.equal(resp.statusCode, 200);
+
+            makeRequest(server, {
+                url: '/register',
+                json: {
+                    email: 'foo@bar.com',
+                    confirmEmail: 'foo@bar.com',
+                    password: 'foobar123'
+                }
+            }, function onResponse2(err, resp) {
+                assert.ifError(err);
+
+                assert.equal(resp.statusCode, 400);
+                assert.equal(resp.body.type,
+                    'services.user.duplicate-email');
 
                 server.close();
                 assert.end();

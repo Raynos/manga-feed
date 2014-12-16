@@ -57,7 +57,7 @@ test('cannot create same user twice', function t(assert) {
             password: 'foo'
         }, function onUser(err, user) {
             assert.ok(err);
-            assert.equal(err.message, 'duplicate email');
+            assert.equal(err.type, 'services.user.duplicate-email');
 
             assert.equal(user, undefined);
 

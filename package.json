@@ -17,6 +17,7 @@
     }
   ],
   "dependencies": {
+    "ansi-styles": "^2.0.0",
     "body": "^4.5.0",
     "error": "^4.3.0",
     "generic-session": "^0.1.0",
@@ -28,9 +29,13 @@
     "logtron": "^6.0.0",
     "pcrypt": "^0.2.0",
     "process": "^0.9.0",
+    "readable-stream": "^1.0.33",
     "request": "^2.49.0",
     "run-parallel": "^1.0.0",
     "send-data": "^3.3.3",
+    "split": "^0.3.2",
+    "split2": "^0.2.1",
+    "through2": "^0.6.3",
     "uncaught-exception": "^4.2.0",
     "validate-form": "^1.0.1",
     "xtend": "^4.0.0",
@@ -52,7 +57,8 @@
     "run-browser": "^1.3.0",
     "tap-spec": "^0.1.8",
     "tape": "git://github.com/substack/tape#remove",
-    "tough-cookie": "^0.12.1"
+    "tough-cookie": "^0.12.1",
+    "v8-profiler": "^5.2.1"
   },
   "licenses": [
     {
@@ -65,7 +71,7 @@
     "test": "npm run jshint -s && node test/index.js | faucet",
     "unit-test": "NODE_ENV=test node test/index.js | tap-spec",
     "jshint": "lint-trap",
-    "cover": "istanbul cover --report html --print detail test/index.js",
+    "cover": "istanbul cover -x 'lib/**' --report html --print detail test/index.js",
     "view-cover": "istanbul report html && opn ./coverage/index.html",
     "travis": "npm run cover -s && istanbul report lcov && ((cat coverage/lcov.info | coveralls) || exit 0)",
     "phantom": "run-browser test/index.js -b",
