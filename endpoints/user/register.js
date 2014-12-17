@@ -1,10 +1,11 @@
 'use strict';
 
-var Validator = require('validate-form');
+// var Validator = require('validate-form');
 var TypedError = require('error/typed');
 
 var typedRequestHandler = require(
     '../../lib/typed-request-handler/');
+var V = require('../../lib/schema-ast/');
 
 var LoggedInError = TypedError({
     type: 'endpoints.user.register.already-logged-in',
@@ -17,21 +18,45 @@ var EmailNotSameError = TypedError({
     statusCode: 400
 });
 
+// var schema = Validator({
+//     email: [
+//         Validator.truthy('is required'),
+//         Validator.email('Must be an email')
+//     ],
+//     confirmEmail: [
+//         Validator.truthy('is required'),
+//         Validator.email('Must be an email')
+//     ],
+//     password: [
+//         Validator.truthy('is required'),
+//         Validator.range(8, Infinity, 'Must be at least 8 char')
+//     ]
+// });
+
+var UserModel = {
+    username: V.email(),
+    email: V.email(),
+    password: V.null(),
+    id: V.string(),
+    hash: V.string()
+};
+
 module.exports = typedRequestHandler(registerUser, {
     session: true,
-    validateBody: Validator({
-        email: [
-            Validator.truthy('is required'),
-            Validator.email('Must be an email')
-        ],
-        confirmEmail: [
-            Validator.truthy('is required'),
-            Validator.email('Must be an email')
-        ],
-        password: [
-            Validator.truthy('is required'),
-            Validator.range(8, Infinity, 'Must be at least 8 char')
-        ]
+    requestSchema: V.http.Request({
+        method: 'POST',
+        body: {
+            email: V.email(),
+            confirmEmail: V.email(),
+            password: V.string({
+                'minLength': 8,
+                'maxLength': Infinity
+            })
+        }
+    }),
+    responseSchema: V.http.Response({
+        statusCode: 200,
+        body: UserModel
     })
 });
 

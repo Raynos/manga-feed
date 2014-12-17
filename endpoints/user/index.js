@@ -1,9 +1,15 @@
 'use strict';
 
 module.exports = {
-    '/register': require('./register'),
-    '/login': loginUser,
-    '/logout': logoutUser
+    '/register': {
+        'POST': require('./register')
+    },
+    '/login': {
+        'POST': loginUser
+    },
+    '/logout': {
+        'POST': logoutUser
+    }
 };
 
 function loginUser(req, res, opts, cb) {

@@ -8,6 +8,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
         makeRequest(server, {
             url: '/register',
+            method: 'POST',
             json: {
                 email: 'foo@bar.com',
                 confirmEmail: 'foo@bar.com',
@@ -30,6 +31,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
         makeRequest(server, {
             url: '/register',
+            method: 'POST',
             json: {
                 email: 'foo@bar.com',
                 confirmEmail: 'foo@bar.com',
@@ -43,6 +45,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
             makeRequest(server, {
                 url: '/register',
+                method: 'POST',
                 json: {
                     email: 'foo@bar.com',
                     confirmEmail: 'foo@bar.com',
@@ -67,6 +70,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
         makeRequest(server, {
             url: '/register',
+            method: 'POST',
             json: {
                 email: 'foo@bar.com',
                 confirmEmail: 'foo2@bar.com',
@@ -89,6 +93,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
         makeRequest(server, {
             url: '/register',
+            method: 'POST',
             json: {
                 email: 'foo@bar.com',
                 confirmEmail: 'foo@bar.com',
@@ -101,6 +106,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
             makeRequest(server, {
                 url: '/register',
+                method: 'POST',
                 json: {
                     email: 'foo@bar.com',
                     confirmEmail: 'foo@bar.com',

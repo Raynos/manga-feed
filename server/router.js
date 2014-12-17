@@ -2,6 +2,7 @@
 
 var HttpHashRouter = require('../lib/http-hash-router/');
 var process = require('process');
+var httpMethods = require('http-methods/method');
 
 var userEndpoint = require('../endpoints/user/');
 
@@ -11,7 +12,8 @@ function createRouter() {
     var router = HttpHashRouter();
 
     router.set('/health', healthEndpoint);
-    router.set('/register', userEndpoint['/register']);
+    router.set('/register',
+        httpMethods(userEndpoint['/register']));
 
     return router;
 }
