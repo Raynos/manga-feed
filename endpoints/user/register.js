@@ -1,6 +1,5 @@
 'use strict';
 
-// var Validator = require('validate-form');
 var TypedError = require('error/typed');
 
 var typedRequestHandler = require(
@@ -17,21 +16,6 @@ var EmailNotSameError = TypedError({
     message: 'The confirm email is not the same as the email',
     statusCode: 400
 });
-
-// var schema = Validator({
-//     email: [
-//         Validator.truthy('is required'),
-//         Validator.email('Must be an email')
-//     ],
-//     confirmEmail: [
-//         Validator.truthy('is required'),
-//         Validator.email('Must be an email')
-//     ],
-//     password: [
-//         Validator.truthy('is required'),
-//         Validator.range(8, Infinity, 'Must be at least 8 char')
-//     ]
-// });
 
 var UserModel = {
     username: V.email(),
