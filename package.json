@@ -27,6 +27,7 @@
     "interset": "0.0.2",
     "jayschema": "^0.3.1",
     "jayschema-error-messages": "^1.0.2",
+    "json-schema-faker": "^0.1.2",
     "level": "^0.18.0",
     "level-secondary": "^1.1.0",
     "level-session": "^0.3.1",

@@ -22,6 +22,7 @@ function createServer(options, cb) {
         }
 
         var router = Router();
+        httpServer.serverSchema = router.serverSchema;
         var services = createServices(clients);
         var opts = {
             clients: clients,
