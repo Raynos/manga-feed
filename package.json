@@ -75,7 +75,7 @@
   "scripts": {
     "start": "node server/start.js",
     "test": "npm run jshint -s && node test/index.js | faucet",
-    "unit-test": "NODE_ENV=test node test/index.js | tap-spec",
+    "unit-test": "NODE_ENV=test node test/unit.js | tap-spec",
     "jshint": "lint-trap",
     "cover": "istanbul cover -x 'lib/**' --report html --print detail test/index.js",
     "view-cover": "istanbul report html && opn ./coverage/index.html",
