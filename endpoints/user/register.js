@@ -27,6 +27,7 @@ var UserModel = {
 
 module.exports = typedRequestHandler(registerUser, {
     session: true,
+    name: 'UserRegister',
     requestSchema: V.http.Request({
         method: 'POST',
         body: {

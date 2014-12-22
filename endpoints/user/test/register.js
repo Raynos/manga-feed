@@ -1,7 +1,8 @@
 'use strict';
 
-var mocks = require('../../../test/mocks/');
 var hammockRequest = require('../../../lib/hammock-request/');
+
+var mocks = require('../../../test/mocks/');
 var register = require('../register.js');
 
 var registerTests = require('./requests/register.js');

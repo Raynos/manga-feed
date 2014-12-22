@@ -1,17 +1,17 @@
 'use strict';
 
 var HttpHashRouter = require('../lib/http-hash-router/');
-var process = require('process');
 var httpMethods = require('http-methods/method');
 
 var userEndpoint = require('../endpoints/user/');
+var healthEndpoint = require('../endpoints/health/');
 
 module.exports = createRouter;
 
 function createRouter() {
     var router = HttpHashRouter();
 
-    router.serverSchema = {
+    router.httpSchema = {
         '/register': {
             'POST': {
                 request: userEndpoint['/register'].POST
@@ -19,17 +19,21 @@ function createRouter() {
                 response: userEndpoint['/register'].POST
                     .responseSchema
             }
+        },
+        '/health': {
+            'GET': {
+                request: healthEndpoint['/health'].GET
+                    .requestSchema,
+                response: healthEndpoint['/health'].GET
+                    .responseSchema
+            }
         }
     };
 
-    router.set('/health', healthEndpoint);
+    router.set('/health',
+        httpMethods(healthEndpoint['/health']));
     router.set('/register',
         httpMethods(userEndpoint['/register']));
 
     return router;
-}
-
-function healthEndpoint(req, res, opts, cb) {
-    res.end('OK');
-    process.nextTick(cb);
 }

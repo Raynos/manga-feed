@@ -63,10 +63,9 @@ function createDatabase(config, clients, cb) {
     var db = level(conf.location, {
         valueEncoding: 'json'
     });
-    db = levelSublevel(db);
-    clients.level = db;
+    clients.level = levelSublevel(db);
 
-    return process.nextTick(cb);
+    process.nextTick(cb);
 }
 
 function createSession(config, clients, cb) {

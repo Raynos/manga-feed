@@ -4,7 +4,7 @@ var path = require('path');
 var os = require('os');
 var cuid = require('cuid');
 
-var createApp = require('../../server.js');
+var createApp = require('../../../server/server.js');
 
 module.exports = allocServer;
 
