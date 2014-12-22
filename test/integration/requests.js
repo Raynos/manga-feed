@@ -1,5 +1,10 @@
 'use strict';
 
+var trycatch = require('trycatch');
+trycatch.configure({
+    'long-stack-traces': true
+});
+
 var test = require('tape');
 
 var makeRequest = require('../../lib/test-server-request/');
@@ -10,9 +15,9 @@ var allocServer = require('./lib/alloc-server.js');
 
 var serverSchema = Router().schema;
 
-var registerTests = require(
-    '../../endpoints/user/test/requests/register.js');
-registerTests(allocServer, makeRequest);
+// var registerTests = require(
+//     '../../endpoints/user/test/requests/register.js');
+// registerTests(allocServer, makeRequest);
 
 quickCheck(test, allocServer, makeRequest, {
     route: '/register',
@@ -24,12 +29,12 @@ quickCheck(test, allocServer, makeRequest, {
     }
 });
 
-var healthTests = require(
-    '../../endpoints/health/test/requests/health.js');
-healthTests(allocServer, makeRequest);
+// var healthTests = require(
+//     '../../endpoints/health/test/requests/health.js');
+// healthTests(allocServer, makeRequest);
 
-quickCheck(test, allocServer, makeRequest, {
-    route: '/health',
-    method: 'GET',
-    schema: serverSchema
-});
+// quickCheck(test, allocServer, makeRequest, {
+//     route: '/health',
+//     method: 'GET',
+//     schema: serverSchema
+// });
