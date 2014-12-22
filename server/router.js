@@ -11,24 +11,9 @@ module.exports = createRouter;
 function createRouter() {
     var router = HttpHashRouter();
 
-    var httpSchema = {
-        '/register': {
-            'POST': {
-                request: userEndpoint['/register'].POST
-                    .requestSchema,
-                response: userEndpoint['/register'].POST
-                    .responseSchema
-            }
-        },
-        '/health': {
-            'GET': {
-                request: healthEndpoint['/health'].GET
-                    .requestSchema,
-                response: healthEndpoint['/health'].GET
-                    .responseSchema
-            }
-        }
-    };
+    var httpSchema = SchemaTable();
+    httpSchema.set('/register', userEndpoint['/register']);
+    httpSchema.set('/health', healthEndpoint['/health']);
 
     router.set('/health',
         httpMethods(healthEndpoint['/health']));
@@ -39,4 +24,23 @@ function createRouter() {
         handler: router,
         schema: httpSchema
     };
+}
+
+function SchemaTable() {
+    var table = {};
+
+    table.set = set;
+
+    return table;
+
+    function set(route, methods) {
+        var schemas = {};
+        Object.keys(methods).forEach(function addSchema(key) {
+            schemas[key] = {
+                request: methods[key].requestSchema,
+                response: methods[key].responseSchema
+            };
+        });
+        table[route] = schemas;
+    }
 }
