@@ -22,7 +22,6 @@ function createServer(options, cb) {
         }
 
         var router = Router();
-        httpServer.httpSchema = router.httpSchema;
         var services = createServices(clients);
         var opts = {
             clients: clients,
@@ -36,12 +35,13 @@ function createServer(options, cb) {
         cb(null, {
             httpServer: httpServer,
             config: config,
+            schema: router.schema,
             clients: clients,
             destroy: clients.destroy
         });
 
         function onRequest(req, res) {
-            router(req, res, opts, handleError);
+            router.handler(req, res, opts, handleError);
 
             function handleError(err) {
                 if (err) {

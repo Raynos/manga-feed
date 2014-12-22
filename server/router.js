@@ -11,7 +11,7 @@ module.exports = createRouter;
 function createRouter() {
     var router = HttpHashRouter();
 
-    router.httpSchema = {
+    var httpSchema = {
         '/register': {
             'POST': {
                 request: userEndpoint['/register'].POST
@@ -35,5 +35,8 @@ function createRouter() {
     router.set('/register',
         httpMethods(userEndpoint['/register']));
 
-    return router;
+    return {
+        handler: router,
+        schema: httpSchema
+    };
 }
