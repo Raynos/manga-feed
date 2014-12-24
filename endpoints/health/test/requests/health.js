@@ -6,7 +6,7 @@ module.exports = function tests(allocServer, makeRequest) {
     test('can request health', function t(assert) {
         var server = allocServer();
 
-        makeRequest(server, {
+        makeRequest(server.httpServer, {
             url: '/health',
             json: true
         }, function onResponse(err, resp) {
@@ -15,7 +15,7 @@ module.exports = function tests(allocServer, makeRequest) {
             assert.equal(resp.statusCode, 200);
             assert.equal(resp.body, 'ok');
 
-            server.close();
+            server.destroy();
             assert.end();
         });
     });

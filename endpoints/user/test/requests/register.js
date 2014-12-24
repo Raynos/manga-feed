@@ -6,7 +6,7 @@ module.exports = function tests(allocServer, makeRequest) {
     test('can register', function registerT(assert) {
         var server = allocServer();
 
-        makeRequest(server, {
+        makeRequest(server.httpServer, {
             url: '/register',
             method: 'POST',
             json: {
@@ -20,7 +20,7 @@ module.exports = function tests(allocServer, makeRequest) {
             assert.equal(resp.statusCode, 200);
             assert.equal(resp.body.email, 'foo@bar.com');
 
-            server.close();
+            server.destroy();
             assert.end();
         });
     });
@@ -29,7 +29,7 @@ module.exports = function tests(allocServer, makeRequest) {
         var server = allocServer();
         var jar = makeRequest.jar();
 
-        makeRequest(server, {
+        makeRequest(server.httpServer, {
             url: '/register',
             method: 'POST',
             json: {
@@ -43,7 +43,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
             assert.equal(resp.statusCode, 200);
 
-            makeRequest(server, {
+            makeRequest(server.httpServer, {
                 url: '/register',
                 method: 'POST',
                 json: {
@@ -59,7 +59,7 @@ module.exports = function tests(allocServer, makeRequest) {
                 assert.equal(resp.body.type,
                     'endpoints.user.register.already-logged-in');
 
-                server.close();
+                server.destroy();
                 assert.end();
             });
         });
@@ -68,7 +68,7 @@ module.exports = function tests(allocServer, makeRequest) {
     test('invalid confirmEmail', function t(assert) {
         var server = allocServer();
 
-        makeRequest(server, {
+        makeRequest(server.httpServer, {
             url: '/register',
             method: 'POST',
             json: {
@@ -83,7 +83,7 @@ module.exports = function tests(allocServer, makeRequest) {
             assert.equal(resp.body.type,
                 'endpoints.user.register.email-not-same');
 
-            server.close();
+            server.destroy();
             assert.end();
         });
     });
@@ -91,7 +91,7 @@ module.exports = function tests(allocServer, makeRequest) {
     test('duplicate email', function t(assert) {
         var server = allocServer();
 
-        makeRequest(server, {
+        makeRequest(server.httpServer, {
             url: '/register',
             method: 'POST',
             json: {
@@ -104,7 +104,7 @@ module.exports = function tests(allocServer, makeRequest) {
 
             assert.equal(resp.statusCode, 200);
 
-            makeRequest(server, {
+            makeRequest(server.httpServer, {
                 url: '/register',
                 method: 'POST',
                 json: {
@@ -119,7 +119,7 @@ module.exports = function tests(allocServer, makeRequest) {
                 assert.equal(resp.body.type,
                     'services.user.duplicate-email');
 
-                server.close();
+                server.destroy();
                 assert.end();
             });
         });

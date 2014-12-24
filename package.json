@@ -20,7 +20,7 @@
     "ansi-styles": "^2.0.0",
     "array-uniq": "^1.0.2",
     "body": "^4.5.0",
-    "error": "^4.4.0",
+    "error": "^5.0.0",
     "generic-session": "^0.1.0",
     "http-hash": "^1.0.2",
     "http-methods": "^1.0.0",

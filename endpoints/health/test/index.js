@@ -11,9 +11,10 @@ healthTests(allocHealthServer, hammockRequest);
 function allocHealthServer(opts) {
     var options = {};
 
-    handler.close = function noopClose() {};
-
-    return handler;
+    return {
+        httpServer: handler,
+        destroy: function noop() {}
+    };
 
     function handler(req, res) {
         health(req, res, options);

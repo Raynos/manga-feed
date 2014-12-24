@@ -8,7 +8,7 @@ var allocServer = require('./lib/alloc-server.js');
 test('responds to 404', function t(assert) {
     var server = allocServer();
 
-    makeRequest(server, {
+    makeRequest(server.httpServer, {
         url: '/404'
     }, function onResponse(err, resp) {
         assert.ifError(err);
@@ -16,7 +16,7 @@ test('responds to 404', function t(assert) {
         assert.equal(resp.statusCode, 404);
         assert.equal(resp.body, 'Resource Not Found');
 
-        server.close();
+        server.destroy();
         assert.end();
     });
 });

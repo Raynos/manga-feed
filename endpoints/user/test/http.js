@@ -1,6 +1,7 @@
 'use strict';
 
 var hammockRequest = require('../../../lib/hammock-request/');
+var Router = require('../../../lib/http-hash-router/');
 
 var mocks = require('../../../test/mocks/');
 var register = require('../register.js');
@@ -22,11 +23,16 @@ function allocRegisterServer(opts) {
         }
     };
 
-    handler.close = function noopClose() {};
+    var router = Router();
 
-    return handler;
+    router.set('/register', register);
+
+    return {
+        httpServer: handler,
+        destroy: function noop() {}
+    };
 
     function handler(req, res) {
-        register(req, res, options);
+        router(req, res, options, function noop() {});
     }
 }

@@ -2,20 +2,16 @@
 
 module.exports = {
     '/register': {
-        'POST': require('./register')
+        'POST': require('./register.js')
     },
     '/login': {
         'POST': loginUser
     },
     '/logout': {
-        'POST': logoutUser
+        'POST': require('./logout.js')
     }
 };
 
 function loginUser(req, res, opts, cb) {
-
-}
-
-function logoutUser(req, res, opts, cb) {
 
 }

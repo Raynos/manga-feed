@@ -1,7 +1,7 @@
 'use strict';
 
 var TypedError = require('error/typed');
-
+var IOError = require('error/io');
 var typedRequestHandler = require(
     '../../lib/typed-request-handler/');
 var V = require('../../lib/schema-ast/');
@@ -58,7 +58,8 @@ function registerUser(treq, opts, cb) {
 
     function onUser(err, user) {
         if (err) {
-            return cb(err);
+            return cb(IOError(err,
+                'unexpected session failure'));
         }
 
         if (user) {
@@ -78,8 +79,11 @@ function registerUser(treq, opts, cb) {
     }
 
     function onRegistered(err, user) {
-        if (err) {
+        if (err && err.type) {
             return cb(err);
+        } else if (err) {
+            return cb(IOError(err,
+                'unexpected user service failure'));
         }
 
         /* failure to write to session is failed login,

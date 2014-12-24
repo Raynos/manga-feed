@@ -21,6 +21,8 @@ function createClients(config, callback) {
         createSession.bind(null, config, clients)
     ], onClients);
 
+    return clients;
+
     function onClients(err) {
         clients.destroy = destroy;
         callback(err, clients);
