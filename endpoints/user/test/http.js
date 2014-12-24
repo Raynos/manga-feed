@@ -7,11 +7,8 @@ var mocks = require('../../../test/mocks/');
 var register = require('../register.js');
 var logout = require('../logout.js');
 
-var registerTests = require('./requests/register.js');
-registerTests(allocUserServer, hammockRequest);
-
-var logoutTests = require('./requests/logout.js');
-logoutTests(allocUserServer, hammockRequest);
+var userTests = require('./requests/');
+userTests(allocUserServer, hammockRequest);
 
 function allocUserServer() {
     var router = Router();
