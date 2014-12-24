@@ -39,10 +39,18 @@ module.exports = typedRequestHandler(registerUser, {
             })
         }
     }),
-    responseSchema: V.http.Response({
-        statusCode: 200,
-        body: UserModel
-    })
+    responseSchema: V.union([
+        V.http.Response({
+            statusCode: 200,
+            body: UserModel
+        }),
+        V.http.TypedError({
+            statusCode: 400,
+            type: 'services.user.duplicate-email'
+        }),
+        V.http.TypedError(LoggedInError),
+        V.http.TypedError(EmailNotSameError)
+    ])
 });
 
 function registerUser(treq, opts, cb) {
