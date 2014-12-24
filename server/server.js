@@ -4,6 +4,7 @@ var http = require('http');
 var fetchConfig = require('zero-config');
 var EventEmitter = require('events').EventEmitter;
 var accessLog = require('../lib/http-access-log/');
+var mutableExtend = require('xtend/mutable');
 
 var createClients = require('./clients/');
 var createServices = require('../services/');
@@ -32,11 +33,13 @@ function createServer(options) {
         accessLog(clients.logger.access));
     httpServer.on('request', onRequest);
 
-    server.httpServer = httpServer;
-    server.config = config;
-    server.clients = clients;
-    server.destroy = destroy;
-
+    mutableExtend(server, {
+        httpServer: httpServer,
+        config: config,
+        clients: clients,
+        services: services,
+        destroy: destroy
+    });
     return server;
 
     function onRequest(req, res) {

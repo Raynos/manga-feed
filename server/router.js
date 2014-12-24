@@ -14,11 +14,14 @@ function createRouter() {
     var httpSchema = SchemaTable();
     httpSchema.set('/register', userEndpoint['/register']);
     httpSchema.set('/health', healthEndpoint['/health']);
+    httpSchema.set('/logout', userEndpoint['/logout']);
 
     router.set('/health',
         httpMethods(healthEndpoint['/health']));
     router.set('/register',
         httpMethods(userEndpoint['/register']));
+    router.set('/logout',
+        httpMethods(userEndpoint['/logout']));
 
     return {
         handler: router,

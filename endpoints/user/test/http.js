@@ -5,34 +5,29 @@ var Router = require('../../../lib/http-hash-router/');
 
 var mocks = require('../../../test/mocks/');
 var register = require('../register.js');
+var logout = require('../logout.js');
 
 var registerTests = require('./requests/register.js');
+registerTests(allocUserServer, hammockRequest);
 
-registerTests(allocRegisterServer, hammockRequest);
+var logoutTests = require('./requests/logout.js');
+logoutTests(allocUserServer, hammockRequest);
 
-function allocRegisterServer(opts) {
-    opts = opts || {};
-    var clients = {
-        session: opts.session || mocks.session(),
-        level: opts.level || mocks.level()
-    };
-    var options = {
-        clients: clients,
-        services: {
-            user: opts.user || mocks.user(clients)
-        }
-    };
-
+function allocUserServer() {
     var router = Router();
+    var clients = {
+        session: mocks.session(),
+        level: mocks.level()
+    };
 
     router.set('/register', register);
+    router.set('/logout', logout);
 
-    return {
-        httpServer: handler,
-        destroy: function noop() {}
-    };
-
-    function handler(req, res) {
-        router(req, res, options, function noop() {});
-    }
+    return mocks.server({
+        clients: clients,
+        services: {
+            user: mocks.user(clients)
+        },
+        handler: router
+    });
 }

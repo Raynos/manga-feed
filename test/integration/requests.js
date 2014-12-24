@@ -24,6 +24,17 @@ quickCheck(test, allocServer, makeRequest, {
     }
 });
 
+var logoutTests = require(
+    '../../endpoints/user/test/requests/logout.js');
+logoutTests(allocServer, makeRequest);
+
+quickCheck(test, allocServer, makeRequest, {
+    route: '/logout',
+    method: 'POST',
+    schema: serverSchema,
+    amount: 5
+});
+
 var healthTests = require(
     '../../endpoints/health/test/requests/health.js');
 healthTests(allocServer, makeRequest);
@@ -31,5 +42,6 @@ healthTests(allocServer, makeRequest);
 quickCheck(test, allocServer, makeRequest, {
     route: '/health',
     method: 'GET',
-    schema: serverSchema
+    schema: serverSchema,
+    amount: 5
 });
