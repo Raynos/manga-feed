@@ -1,5 +1,6 @@
 'use strict';
 
+var assert = require('assert');
 var HttpHashRouter = require('../lib/http-hash-router/');
 var httpMethods = require('http-methods/method');
 
@@ -39,9 +40,14 @@ function SchemaTable() {
     function set(route, methods) {
         var schemas = {};
         Object.keys(methods).forEach(function addSchema(key) {
+            var h = methods[key];
+
+            assert(h.requestSchema, 'requestSchema required');
+            assert(h.responseSchema, 'responseSchema required');
+
             schemas[key] = {
-                request: methods[key].requestSchema,
-                response: methods[key].responseSchema
+                request: h.requestSchema,
+                response: h.responseSchema
             };
         });
         table[route] = schemas;
