@@ -1,3 +1,3 @@
 'use strict';
 
-require('./register.js');
+require('./create.js');

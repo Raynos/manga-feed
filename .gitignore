@@ -40,6 +40,7 @@ node_modules/
 dump.rdb
 *.tap
 *.xml
+*.debug
 
 # OS generated files #
 ######################

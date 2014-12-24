@@ -8,17 +8,17 @@ var UserService = require('../index.js');
 test('can create user service', function t(assert) {
     var userService = allocUserService();
 
-    assert.equal(typeof userService.register, 'function');
+    assert.equal(typeof userService.create, 'function');
     assert.end();
 });
 
-test('can register a user', function t(assert) {
+test('can create a user', function t(assert) {
     var level = mocks.level();
     var userService = allocUserService({
         level: level
     });
 
-    userService.register({
+    userService.create({
         email: 'bob@bob.com',
         password: 'hello'
     }, function onUser(err, user) {
@@ -44,7 +44,7 @@ test('can register a user', function t(assert) {
 test('cannot create same user twice', function t(assert) {
     var userService = allocUserService();
 
-    userService.register({
+    userService.create({
         email: 'bob@bob.com',
         password: 'foo'
     }, function onUser(err, user) {
@@ -52,7 +52,7 @@ test('cannot create same user twice', function t(assert) {
 
         assert.ok(user.id);
 
-        userService.register({
+        userService.create({
             email: 'bob@bob.com',
             password: 'foo'
         }, function onUser(err, user) {

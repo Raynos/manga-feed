@@ -72,7 +72,7 @@ function registerUser(treq, opts, cb) {
 
         var userService = opts.services.user;
 
-        userService.register({
+        userService.create({
             email: treq.body.email,
             password: treq.body.password
         }, onRegistered);

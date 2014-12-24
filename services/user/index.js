@@ -27,10 +27,10 @@ function UserService(clients) {
     var emailIndex = Secondary(usersDb, 'email');
 
     return {
-        register: register
+        create: create
     };
 
-    function register(user, callback) {
+    function create(user, callback) {
         var userObj = new UserStruct(user);
         userObj.id = cuid();
 
