@@ -15,9 +15,13 @@ var DuplicateEmailError = TypedError({
 
 module.exports = UserService;
 
-function UserService(clients) {
-    assert.ok(clients.level, 'clients.level required');
+function UserStruct(opts) {
+    this.email = opts.email;
+    this.id = null;
+    this.hash = null;
+}
 
+function UserData(clients) {
     var db = levelSublevel(clients.level);
     var usersDb = db.sublevel('users', {
         valueEncoding: 'json'
@@ -27,52 +31,64 @@ function UserService(clients) {
     var emailIndex = Secondary(usersDb, 'email');
 
     return {
-        create: create
+        getByEmail: function getByEmail(email, callback) {
+            emailIndex.get(email, callback);
+        },
+        generatePassword: function genPassword(pw, callback) {
+            passGen.gen(pw, callback);
+        },
+        storeUser: function storeUser(user, callback) {
+            usersDb.put(user.id, user, callback);
+        }
     };
+}
 
-    function create(user, callback) {
-        var userObj = new UserStruct(user);
-        userObj.id = cuid();
-
-        emailIndex.get(user.email, onUser);
-
-        function onUser(err, user) {
-            if (err && !err.notFound) {
-                return callback(err);
-            }
-
-            if (user) {
-                return callback(DuplicateEmailError());
-            }
-
-            passGen.gen(userObj.password, onHash);
-        }
-
-        function onHash(err, hash) {
-            if (err) {
-                return callback(err);
-            }
-
-            userObj.password = null;
-            userObj.hash = hash;
-
-            usersDb.put(userObj.id, userObj, onWrite);
-
-            function onWrite(err) {
-                if (err) {
-                    return callback(err);
-                }
-
-                callback(null, userObj);
-            }
-        }
+function UserService(clients) {
+    if (!(this instanceof UserService)) {
+        return new UserService(clients);
     }
+
+    assert.ok(clients.level, 'clients.level required');
+
+    this.data = UserData(clients);
 }
 
-function UserStruct(opts) {
-    this.username = opts.email;
-    this.email = opts.email;
-    this.password = opts.password;
-    this.id = null;
-    this.hash = null;
-}
+var proto = UserService.prototype;
+
+proto.create = function create(userArg, callback) {
+    var self = this;
+    var userObj = new UserStruct(userArg);
+    userObj.id = cuid();
+
+    self.data.getByEmail(userObj.email, onUser);
+
+    function onUser(err, user) {
+        if (err && !err.notFound) {
+            return callback(err);
+        }
+
+        if (user) {
+            return callback(DuplicateEmailError());
+        }
+
+        self.data.generatePassword(userArg.password, onHash);
+    }
+
+    function onHash(err, hash) {
+        if (err) {
+            return callback(err);
+        }
+
+        userObj.hash = hash;
+
+        self.data.storeUser(userObj, onWrite);
+    }
+
+    function onWrite(err) {
+        if (err) {
+            return callback(err);
+        }
+
+        callback(null, userObj);
+    }
+};

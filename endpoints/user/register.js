@@ -6,6 +6,8 @@ var typedRequestHandler = require(
     '../../lib/typed-request-handler/');
 var V = require('../../lib/schema-ast/');
 
+var schemas = require('./schemas.js');
+
 var LoggedInError = TypedError({
     type: 'endpoints.user.register.already-logged-in',
     message: 'User is already logged in',
@@ -16,14 +18,6 @@ var EmailNotSameError = TypedError({
     message: 'The confirm email is not the same as the email',
     statusCode: 400
 });
-
-var UserModel = {
-    username: V.email(),
-    email: V.email(),
-    password: V.null(),
-    id: V.string(),
-    hash: V.string()
-};
 
 module.exports = typedRequestHandler(registerUser, {
     session: true,
@@ -42,7 +36,7 @@ module.exports = typedRequestHandler(registerUser, {
     responseSchema: V.union([
         V.http.Response({
             statusCode: 200,
-            body: UserModel
+            body: schemas.UserModel
         }),
         V.http.TypedError({
             statusCode: 400,

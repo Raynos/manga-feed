@@ -5,13 +5,9 @@ module.exports = {
         'POST': require('./register.js')
     },
     '/login': {
-        'POST': loginUser
+        'POST': require('./login.js')
     },
     '/logout': {
         'POST': require('./logout.js')
     }
 };
-
-function loginUser(req, res, opts, cb) {
-
-}

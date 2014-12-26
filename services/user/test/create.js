@@ -27,7 +27,6 @@ test('can create a user', function t(assert) {
         assert.ok(user.id);
         assert.ok(user.hash);
         assert.equal(user.email, 'bob@bob.com');
-        assert.equal(user.password, null);
 
         var k = '!users!' + user.id;
         level.get(k, function onUser(err, user2) {
