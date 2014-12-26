@@ -105,7 +105,8 @@
     "trace": {
       "debuglog": [
         "typedrequesthandler"
-      ]
+      ],
+      "leakedHandles": true
     }
   }
 }
