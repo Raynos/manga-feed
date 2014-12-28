@@ -22,6 +22,9 @@ function UserData(clients) {
         generatePassword: function genPassword(pw, callback) {
             passGen.gen(pw, callback);
         },
+        comparePassword: function comparePassword(pw, hash, cb) {
+            passGen.compare(pw, hash, cb);
+        },
         storeUser: function storeUser(user, callback) {
             usersDb.put(user.id, user, callback);
         }

@@ -1,22 +1,53 @@
 'use strict';
 
 var IOError = require('error/io');
+var TypedError = require('error/typed');
 var typedRequestHandler = require(
     '../../lib/typed-request-handler/');
 var V = require('../../lib/schema-ast/');
 
 var schemas = require('./schemas.js');
 
+var AlreadyLoggedInError = TypedError({
+    type: 'endpoints.user.already-logged-in',
+    message: 'The user is already logged in.\n' +
+        'Expected {email} to not be logged in.\n',
+    statusCode: 400,
+    email: null
+});
+var InvalidLoginCredentialsError = TypedError({
+    type: 'endpoints.user.invalid-login-credentials',
+    message: 'The user email or password is incorrect.\n' +
+        'Expected {email} and password to be correct.\n',
+    statusCode: 400,
+    email: null
+});
+
 module.exports = typedRequestHandler(loginUser, {
     session: true,
     name: 'UserLogin',
     requestSchema: V.http.Request({
-        method: 'POST'
+        method: 'POST',
+        body: {
+            email: V.email(),
+            password: V.string({
+                'minLength': 8,
+                'maxLength': Infinity
+            })
+        }
     }),
-    responseSchema: V.http.Response({
-        statusCode: 200,
-        body: schemas.UserModel
-    })
+    responseSchema: V.union([
+        V.http.Response({
+            statusCode: 200,
+            body: schemas.UserModel
+        }),
+        V.http.TypedError(AlreadyLoggedInError, {
+            email: V.string()
+        }),
+        V.http.TypedError(InvalidLoginCredentialsError, {
+            email: V.string()
+        })
+    ])
 });
 
 function loginUser(treq, opts, cb) {
@@ -29,7 +60,9 @@ function loginUser(treq, opts, cb) {
         }
 
         if (user) {
-            return cb(new Error('already logged in'));
+            return cb(AlreadyLoggedInError({
+                email: user.email
+            }));
         }
 
         var userService = opts.services.user;
@@ -41,8 +74,13 @@ function loginUser(treq, opts, cb) {
     }
 
     function onVerified(err, user) {
-        if (err && err.type) {
-            return cb(err);
+        if (err && (
+            err.type === 'services.user.invalid-password' ||
+            err.type === 'services.user.non-existant-user'
+        )) {
+            return cb(InvalidLoginCredentialsError({
+                email: treq.body.email
+            }));
         } else if (err) {
             return cb(IOError(err,
                 'unexpected user service failure'));

@@ -41,6 +41,8 @@ module.exports = typedRequestHandler(registerUser, {
         V.http.TypedError({
             statusCode: 400,
             type: 'services.user.duplicate-email'
+        }, {
+            email: V.string()
         }),
         V.http.TypedError(LoggedInError),
         V.http.TypedError(EmailNotSameError)

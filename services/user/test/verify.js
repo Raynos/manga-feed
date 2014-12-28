@@ -40,9 +40,51 @@ test('can verify an existing user', function t(assert) {
         }
     }
 });
-test('fails verify for non-existant user');
-test('fails verify for bad password');
-test('returns user record');
+
+test('fails verify for non-existant user', function t(assert) {
+    var userService = allocUserService();
+
+    userService.verify({
+        email: 'bob@bob.com',
+        password: 'foo'
+    }, onVerify);
+
+    function onVerify(err, user) {
+        assert.ok(err);
+
+        assert.equal(user, undefined);
+        assert.equal(err.type, 'services.user.non-existant-user');
+
+        assert.end();
+    }
+});
+
+test('fails verify for bad password', function t(assert) {
+    var userService = allocUserService();
+
+    userService.create({
+        email: 'bob@bob.com',
+        password: 'foo'
+    }, onCreate);
+
+    function onCreate(err) {
+        assert.ifError(err);
+
+        userService.verify({
+            email: 'bob@bob.com',
+            password: 'bar'
+        }, onVerify);
+    }
+
+    function onVerify(err, user) {
+        assert.ok(err);
+
+        assert.equal(user, undefined);
+        assert.equal(err.type, 'services.user.invalid-password');
+
+        assert.end();
+    }
+});
 
 function allocUserService(opts) {
     opts = opts || {};

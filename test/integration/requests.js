@@ -25,19 +25,33 @@ quickCheck(test, allocServer, makeRequest, {
     map: function isValid(x) {
         x.body.confirmEmail = x.body.email;
         return x;
-    }
+    },
+    amount: 25
+});
+
+quickCheck(test, allocServer, makeRequest, {
+    route: '/login',
+    method: 'POST',
+    schema: serverSchema,
+    expect: {
+        statusCode: 400,
+        body: {
+            type: 'endpoints.user.invalid-login-credentials'
+        }
+    },
+    amount: 25
 });
 
 quickCheck(test, allocServer, makeRequest, {
     route: '/logout',
     method: 'POST',
     schema: serverSchema,
-    amount: 5
+    amount: 1
 });
 
 quickCheck(test, allocServer, makeRequest, {
     route: '/health',
     method: 'GET',
     schema: serverSchema,
-    amount: 5
+    amount: 1
 });

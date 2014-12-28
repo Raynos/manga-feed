@@ -74,6 +74,58 @@ module.exports = function tests(allocServer, makeRequest) {
             server.destroy();
             assert.end();
         }
+    });
 
+    test('can register, logout & login', function t(assert) {
+        var server = allocServer();
+        var jar = makeRequest.jar();
+
+        makeRequest(server.httpServer, {
+            url: '/register',
+            method: 'POST',
+            json: {
+                email: 'bob@bob.com',
+                confirmEmail: 'bob@bob.com',
+                password: 'foobar123'
+            },
+            jar: jar
+        }, onRegistered);
+
+        function onRegistered(err, resp) {
+            assert.ifError(err);
+
+            assert.equal(resp.statusCode, 200);
+
+            makeRequest(server.httpServer, {
+                url: '/logout',
+                method: 'POST',
+                jar: jar
+            }, onLogout);
+        }
+
+        function onLogout(err, resp) {
+            assert.ifError(err);
+
+            assert.equal(resp.statusCode, 200);
+
+            makeRequest(server.httpServer, {
+                url: '/login',
+                method: 'POST',
+                json: {
+                    email: 'bob@bob.com',
+                    password: 'foobar123'
+                },
+                jar: jar
+            }, onLogin);
+        }
+
+        function onLogin(err, resp) {
+            assert.ifError(err);
+
+            assert.equal(resp.statusCode, 200);
+
+            server.destroy();
+            assert.end();
+        }
     });
 };

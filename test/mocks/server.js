@@ -1,6 +1,8 @@
 'use strict';
 
 var assert = require('assert');
+var setTimeout = require('timers').setTimeout;
+var clearTimeout = require('timers').clearTimeout;
 
 module.exports = MockServer;
 
@@ -19,6 +21,8 @@ function MockServer(options) {
         services: services
     };
 
+    var timeout = setTimeout(blowup, 1000);
+
     return {
         httpServer: httpHandler,
         clients: clients,
@@ -26,7 +30,13 @@ function MockServer(options) {
         destroy: destroy
     };
 
+    function blowup() {
+        throw new Error('Forgot to `.destroy()` the mockServer');
+    }
+
     function destroy() {
+        clearTimeout(timeout);
+
         if (typeof clients.destroy === 'function') {
             clients.destroy();
         }

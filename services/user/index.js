@@ -9,8 +9,25 @@ var Structs = require('./struct.js');
 
 var DuplicateEmailError = TypedError({
     type: 'services.user.duplicate-email',
-    message: 'A user with that email already exists',
-    statusCode: 400
+    message: 'A user with that email already exists.\n' +
+        'Expected {email} to not exist.\n',
+    statusCode: 400,
+    email: null
+});
+var NonExistantUserError = TypedError({
+    type: 'services.user.non-existant-user',
+    message: 'A user with that email does not exist.\n' +
+        'Expected {email} to exist.\n',
+    statusCode: 404,
+    email: null
+});
+var InvalidPasswordError = TypedError({
+    type: 'services.user.invalid-password',
+    message: 'The password is invalid for requested user.\n' +
+        'Expected password to match {hash} for user {email}.\n',
+    statusCode: 400,
+    email: null,
+    hash: null
 });
 
 module.exports = UserService;
@@ -40,7 +57,9 @@ proto.create = function create(userArg, callback) {
         }
 
         if (user) {
-            return callback(DuplicateEmailError());
+            return callback(DuplicateEmailError({
+                email: userObj.email
+            }));
         }
 
         self.data.generatePassword(userArg.password, onHash);
@@ -71,11 +90,33 @@ proto.verify = function verify(userArg, cb) {
     self.data.getByEmail(userArg.email, onUser);
 
     function onUser(err, user) {
-        if (err) {
+        if (err && !('notFound' in err)) {
             return cb(err);
         }
 
-        var userObj = Structs.User(user);
-        cb(null, userObj);
+        if (err && err.notFound) {
+            return cb(NonExistantUserError({
+                email: userArg.email
+            }));
+        }
+
+        self.data.comparePassword(userArg.password,
+            user.hash, onCompare);
+
+        function onCompare(err, match) {
+            if (err) {
+                return cb(err);
+            }
+
+            if (!match) {
+                return cb(InvalidPasswordError({
+                    email: userArg.email,
+                    hash: user.hash
+                }));
+            }
+
+            var userObj = Structs.User(user);
+            cb(null, userObj);
+        }
     }
 };

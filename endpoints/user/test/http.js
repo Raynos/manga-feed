@@ -6,6 +6,7 @@ var Router = require('../../../lib/http-hash-router/');
 var mocks = require('../../../test/mocks/');
 var register = require('../register.js');
 var logout = require('../logout.js');
+var login = require('../login.js');
 
 var userTests = require('./requests/');
 userTests(allocUserServer, hammockRequest);
@@ -19,6 +20,7 @@ function allocUserServer() {
 
     router.set('/register', register);
     router.set('/logout', logout);
+    router.set('/login', login);
 
     return mocks.server({
         clients: clients,
