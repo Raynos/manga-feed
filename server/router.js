@@ -6,6 +6,7 @@ var httpMethods = require('http-methods/method');
 
 var userEndpoint = require('../endpoints/user/');
 var healthEndpoint = require('../endpoints/health/');
+var appRoutes = require('../app/routes/');
 
 module.exports = createRouter;
 
@@ -26,6 +27,11 @@ function createRouter() {
         httpMethods(userEndpoint['/logout']));
     router.set('/login',
         httpMethods(userEndpoint['/login']));
+
+    router.set('/',
+        httpMethods(appRoutes['/']));
+    router.set('/app/js/:id',
+        httpMethods(appRoutes['/app/js/:id']));
 
     return {
         handler: router,
