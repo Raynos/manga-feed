@@ -1,0 +1,8 @@
+{
+    "globalstrict": true,
+    "nonew": true,
+    "newcap": false,
+    "validthis": true,
+
+    "predef": ["require", "module", "__filename", "__dirname"]
+}
