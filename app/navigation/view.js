@@ -73,7 +73,7 @@ function userInfo() {
         h('.user-logout', {
             style: styles.logoutButton
         }, [
-            h('button', , 'Logout')
+            h('button', {}, 'Logout')
         ])
     ]);
 }

@@ -9,7 +9,8 @@ var requireFresh = require('require-fresh');
 
 var loadPage = requireFresh({
     dir: path.join(__dirname, '..'),
-    watch: true
+    watch: false,
+    force: true
 });
 
 module.exports = {
@@ -26,7 +27,9 @@ module.exports = {
 };
 
 function serveHomePage(req, res) {
-    var MainApp = loadPage('./main/');
+    var MainApp = loadPage('./main/', {
+        fresh: true
+    });
 
     var app = MainApp();
     var page = layout(MainApp.render(app));

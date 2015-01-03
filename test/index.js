@@ -1,7 +1,7 @@
 'use strict';
 
 require('leaked-handles').set({
-    timeout: 30000
+    timeout: 5000
 });
 // require('format-stack');
 
